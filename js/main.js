@@ -6,7 +6,7 @@ $(document).ready(function(){
     "November", "December"
   ]
 
-  var tick = 10
+  var tick = 20
 
   var map = new L.Map('map')
 
@@ -20,18 +20,20 @@ $(document).ready(function(){
 
   // method that we will use to update the control based on feature properties passed
   info.update = function (props) {
-      this._div.innerHTML = '<button id="start" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><span id="date"></span><input type="range" id="slider" min="1" value="1" max="1" step="1">';
+    this._div.innerHTML = '<div class="btn-group" role="group"><button id="prev" type="button" class="btn btn-default"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></button><button id="start" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button id="forward" type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></button></div><span id="date"></span><input type="range" id="slider" min="1" value="1" max="1" step="1">';
   };
 
   info.addTo(map);
 
   info.getContainer().addEventListener('mouseover', function () {
-      map.dragging.disable();
+    map.doubleClickZoom.disable()
+    map.dragging.disable();
   });
 
   // Re-enable dragging when user's cursor leaves the element
   info.getContainer().addEventListener('mouseout', function () {
-      map.dragging.enable();
+    map.doubleClickZoom.enable()
+    map.dragging.enable();
   });
 
   var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png');
@@ -79,7 +81,12 @@ $(document).ready(function(){
       var day = date.getDate();
       var monthIndex = date.getMonth();
       var year = date.getFullYear();
-      return monthNames[monthIndex] + ' ' + day + ' ' + year
+      var hr = date.getHours();
+      var min = date.getMinutes()
+      if (min < 10) {
+        min = '0' + min
+      }
+      return monthNames[monthIndex] + ' ' + day + ' ' + year + ' ' + hr + ':' + min
     } else return ''
   }
 
@@ -95,7 +102,7 @@ $(document).ready(function(){
       }
       trackLayer.addData(geojson)
       finMarker.setLatLng([track.geometry.coordinates[idx+1][1], track.geometry.coordinates[idx+1][0]])
-      dateEl.html(formatDate(track.properties.time[idx]))
+      dateEl.html(formatDate(track.properties.time[idx+1]))
       slider.val(idx)
       idx = idx + 1
     }
@@ -113,6 +120,43 @@ $(document).ready(function(){
       intervalID = setInterval(intervalFunc, tick)
     }
     isRunning = !isRunning
+  })
+
+  $('#prev').click(function() {
+    if (idx > 1) {
+      var value = idx - 1
+      trackLayer.clearLayers()
+      var geojson = {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": track.geometry.coordinates.slice(0,value+1)
+        },
+        "properties": {}
+      }
+      trackLayer.addData(geojson)
+      finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
+      dateEl.html(formatDate(track.properties.time[value]))
+      idx = value
+    }
+  })
+
+  $('#forward').click(function() {
+    if (idx < track.geometry.coordinates.length-1) {
+      var value = idx + 1
+      var geojson = {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": track.geometry.coordinates.slice(idx,value+1)
+        },
+        "properties": {}
+      }
+      trackLayer.addData(geojson)
+      finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
+      dateEl.html(formatDate(track.properties.time[value]))
+      idx = value
+    }
   })
 
   $('#slider').on('input change', function() {
