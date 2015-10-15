@@ -41,9 +41,11 @@ $(document).ready(function(){
   var ocean = new L.TileLayer('http://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
     attribution: '<a href="http://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer">ESRI World Ocean Base</a>'
   })
+  var labels = new L.TileLayer('http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}')
   map.setView([40, -80], 4)
 
   map.addLayer(ocean)
+  map.addLayer(labels)
 
   $('#slider').attr('max', track.geometry.coordinates.length-1)
 
