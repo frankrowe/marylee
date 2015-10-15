@@ -132,12 +132,14 @@ $(document).ready(function(){
     }
   })
 
-  $('#slider').on('input change', function() {
+  $('#slider').on('input change', function(e) {
+    e.preventDefault()
     clearInterval(intervalID)
     addPing(+$(this).val())
+    return false
   })
 
-  $('#slider').on(' change', function() {
+  $('#slider').on('change', function() {
     if (isRunning) {
       intervalID = setInterval(intervalFunc, tick)
     }
