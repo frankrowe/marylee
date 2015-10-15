@@ -6,7 +6,7 @@ $(document).ready(function(){
     "November", "December"
   ]
 
-  var tick = 5
+  var tick = 20
 
   var map = new L.Map('map')
 
