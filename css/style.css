@@ -5,3 +5,25 @@
 .header {
   text-align: center;
 }
+
+#slider {
+  margin-top: 10px;
+}
+
+.row {
+  padding-top: 10px;
+}
+
+#start {
+}
+
+#date {
+  line-height: 34px;
+  padding-left: 5px;
+}
+
+.controls {
+  width: 300px;
+  background: rgba(255, 255, 255, .7);
+  padding: 10px;
+}
