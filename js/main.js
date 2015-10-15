@@ -6,7 +6,7 @@ $(document).ready(function(){
     "November", "December"
   ]
 
-  var tick = 20
+  var tick = 5
 
   var map = new L.Map('map')
 
@@ -51,20 +51,9 @@ $(document).ready(function(){
     iconUrl: './shark.png',
     iconSize:     [71, 41], // size of the icon
     iconAnchor:   [35, 20], // point of the icon which will correspond to marker's location
-})
+  })
 
-  var starting_geojson = {
-    "type": "Feature",
-    "geometry": {
-      "type": "LineString",
-      "coordinates": track.geometry.coordinates.slice(0,2)
-    },
-    "properties": {
-      "time": track.properties.time.slice(0,2)
-    }
-  }
-
-  var trackLayer = L.geoJson(starting_geojson, {
+  var trackLayer = L.geoJson(null, {
     opacity: 1
     , weight: 1
   }).addTo(map)
@@ -74,6 +63,8 @@ $(document).ready(function(){
   var idx = 1
   var dateEl = $('#date')
   var slider = $('#slider')
+
+  addPing(idx)
 
   function formatDate(_date) {
     if (_date) {
@@ -90,22 +81,27 @@ $(document).ready(function(){
     } else return ''
   }
 
-  var intervalFunc = function() {
+  function addPing(value) {
     if (idx < track.geometry.coordinates.length-1) {
-       var geojson = {
+      trackLayer.clearLayers()
+      var geojson = {
         "type": "Feature",
         "geometry": {
           "type": "LineString",
-          "coordinates": track.geometry.coordinates.slice(idx,idx+2)
+          "coordinates": track.geometry.coordinates.slice(0,value+1)
         },
         "properties": {}
       }
       trackLayer.addData(geojson)
-      finMarker.setLatLng([track.geometry.coordinates[idx+1][1], track.geometry.coordinates[idx+1][0]])
-      dateEl.html(formatDate(track.properties.time[idx+1]))
-      slider.val(idx)
-      idx = idx + 1
+      finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
+      dateEl.html(formatDate(track.properties.time[value]))
+      idx = value
     }
+  }
+
+  var intervalFunc = function() {
+    addPing(idx+1)
+    slider.val(idx+1)
   }
 
   var intervalID = setInterval(intervalFunc, tick)
@@ -124,65 +120,22 @@ $(document).ready(function(){
 
   $('#prev').click(function() {
     if (idx > 1) {
-      var value = idx - 1
-      trackLayer.clearLayers()
-      var geojson = {
-        "type": "Feature",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": track.geometry.coordinates.slice(0,value+1)
-        },
-        "properties": {}
-      }
-      trackLayer.addData(geojson)
-      finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
-      dateEl.html(formatDate(track.properties.time[value]))
-      idx = value
+      addPing(idx - 1)
     }
   })
 
   $('#forward').click(function() {
     if (idx < track.geometry.coordinates.length-1) {
-      var value = idx + 1
-      var geojson = {
-        "type": "Feature",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": track.geometry.coordinates.slice(idx,value+1)
-        },
-        "properties": {}
-      }
-      trackLayer.addData(geojson)
-      finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
-      dateEl.html(formatDate(track.properties.time[value]))
-      idx = value
+      addPing(idx+1)
     }
   })
 
   $('#slider').on('input change', function() {
     clearInterval(intervalID)
-    var value = +$(this).val()
-    if (value < idx) {
-      trackLayer.clearLayers()
-      idx = 1
-    }
-    var geojson = {
-      "type": "Feature",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": track.geometry.coordinates.slice(idx,value+1)
-      },
-      "properties": {}
-    }
-    trackLayer.addData(geojson)
-    finMarker.setLatLng([track.geometry.coordinates[value][1], track.geometry.coordinates[value][0]])
-    dateEl.html(formatDate(track.properties.time[value]))
-    idx = value
-
+    addPing(+$(this).val())
   })
 
   $('#slider').on(' change', function() {
-    var value = +$(this).val()
     if (isRunning) {
       intervalID = setInterval(intervalFunc, tick)
     }
