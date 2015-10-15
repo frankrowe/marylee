@@ -134,12 +134,14 @@ $(document).ready(function(){
 
   $('#slider').on('input change', function(e) {
     e.preventDefault()
+    map.dragging.disable();
     clearInterval(intervalID)
     addPing(+$(this).val())
     return false
   })
 
   $('#slider').on('change', function() {
+    map.dragging.enable();
     if (isRunning) {
       intervalID = setInterval(intervalFunc, tick)
     }
