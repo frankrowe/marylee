@@ -134,27 +134,14 @@ $(document).ready(function(){
   })
 
   $('#slider').on('input change', function(e) {
-    e.preventDefault()
-    console.log('change')
-    map.dragging.disable()
     clearInterval(intervalID)
     addPing(+$(this).val())
-    return false
   })
 
   $('#slider').on('change', function() {
-    map.dragging.enable()
     if (isRunning) {
       intervalID = setInterval(intervalFunc, tick)
     }
-  })
-
-  $('.controls').on('touchstart', function() {
-    map.dragging.disable()
-  })
-
-  $('.controls').on('touchend', function() {
-    map.dragging.enable()
   })
 
 })
