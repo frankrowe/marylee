@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   var monthNames = [
     "January", "February", "March",
     "April", "May", "June", "July",
@@ -10,39 +11,24 @@ $(document).ready(function(){
 
   var map = new L.Map('map')
 
-  var info = L.control({position: 'bottomleft'});
+  var info = L.control({position: 'bottomleft'})
 
   info.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'controls'); // create a div with a class "info"
+      this._div = L.DomUtil.create('div', 'controls')
       L.DomEvent.disableClickPropagation(this._div)
-      this.update();
-      return this._div;
-  };
+      this._div.innerHTML = '<div class="btn-group" role="group"><button id="prev" type="button" class="btn btn-default"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></button><button id="start" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button id="forward" type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></button></div><span id="date"></span><input type="range" id="slider" min="1" value="1" max="1" step="1">'
+      return this._div
+  }
 
-  // method that we will use to update the control based on feature properties passed
-  info.update = function (props) {
-    this._div.innerHTML = '<div class="btn-group" role="group"><button id="prev" type="button" class="btn btn-default"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></button><button id="start" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button id="forward" type="button" class="btn btn-default"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></button></div><span id="date"></span><input type="range" id="slider" min="1" value="1" max="1" step="1">';
-  };
+  info.addTo(map)
 
-  info.addTo(map);
-
-  // info.getContainer().addEventListener('mouseover', function () {
-  //   map.doubleClickZoom.disable()
-  //   map.dragging.disable();
-  // });
-
-  // // Re-enable dragging when user's cursor leaves the element
-  // info.getContainer().addEventListener('mouseout', function () {
-  //   map.doubleClickZoom.enable()
-  //   map.dragging.enable();
-  // });
-
-  var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png');
-  var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+  var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png')
+  var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png')
   var ocean = new L.TileLayer('http://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
     attribution: '<a href="http://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer">ESRI World Ocean Base</a>'
   })
   var labels = new L.TileLayer('http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}')
+
   map.setView([40, -80], 4)
 
   map.addLayer(ocean)
@@ -72,10 +58,10 @@ $(document).ready(function(){
   function formatDate(_date) {
     if (_date) {
       var date = new Date(_date)
-      var day = date.getDate();
-      var monthIndex = date.getMonth();
-      var year = date.getFullYear();
-      var hr = date.getHours();
+      var day = date.getDate()
+      var monthIndex = date.getMonth()
+      var year = date.getFullYear()
+      var hr = date.getHours()
       var min = date.getMinutes()
       if (min < 10) {
         min = '0' + min
