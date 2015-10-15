@@ -82,7 +82,7 @@ $(document).ready(function(){
   }
 
   function addPing(value) {
-    if (idx < track.geometry.coordinates.length-1) {
+    if (idx < track.geometry.coordinates.length-1 || value < idx) {
       trackLayer.clearLayers()
       var geojson = {
         "type": "Feature",
