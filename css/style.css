@@ -10,10 +10,6 @@
   margin-top: 10px;
 }
 
-.row {
-  padding-top: 10px;
-}
-
 #start {
 }
 
@@ -26,4 +22,8 @@
   width: 300px;
   background: rgba(255, 255, 255, .7);
   padding: 10px;
+}
+
+.col-md-12 {
+  padding: 0;
 }
