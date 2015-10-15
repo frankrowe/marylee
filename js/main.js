@@ -149,10 +149,12 @@ $(document).ready(function(){
   })
 
   $('.controls').on('touchstart', function() {
+    console.log('touchstart')
     map.dragging.disable()
   })
 
-    $('.controls').on('touchend', function() {
+  $('.controls').on('touchend', function() {
+    console.log('touchend')
     map.dragging.enable()
   })
 
