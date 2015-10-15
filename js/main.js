@@ -14,6 +14,7 @@ $(document).ready(function(){
 
   info.onAdd = function (map) {
       this._div = L.DomUtil.create('div', 'controls'); // create a div with a class "info"
+      L.DomEvent.disableClickPropagation(this._div)
       this.update();
       return this._div;
   };
@@ -149,12 +150,10 @@ $(document).ready(function(){
   })
 
   $('.controls').on('touchstart', function() {
-    console.log('touchstart')
     map.dragging.disable()
   })
 
   $('.controls').on('touchend', function() {
-    console.log('touchend')
     map.dragging.enable()
   })
 
