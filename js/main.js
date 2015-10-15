@@ -26,16 +26,16 @@ $(document).ready(function(){
 
   info.addTo(map);
 
-  info.getContainer().addEventListener('mouseover', function () {
-    map.doubleClickZoom.disable()
-    map.dragging.disable();
-  });
+  // info.getContainer().addEventListener('mouseover', function () {
+  //   map.doubleClickZoom.disable()
+  //   map.dragging.disable();
+  // });
 
-  // Re-enable dragging when user's cursor leaves the element
-  info.getContainer().addEventListener('mouseout', function () {
-    map.doubleClickZoom.enable()
-    map.dragging.enable();
-  });
+  // // Re-enable dragging when user's cursor leaves the element
+  // info.getContainer().addEventListener('mouseout', function () {
+  //   map.doubleClickZoom.enable()
+  //   map.dragging.enable();
+  // });
 
   var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png');
   var osm = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
